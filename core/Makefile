@@ -10,11 +10,29 @@ FLASH_ADDRESS ?= 0x08000000
 # GCC_PATH=
 
 ######################################
+# OS
+######################################
+ifeq ($(OS),Windows_NT)
+	GCC_PATH = ../../DaisyToolchain/windows/bin
+	OCD_DIR ?= ../../DaisyToolchain/windows/scripts
+	DFU = ../../DaisyToolchain/windows/bin/dfu-util.exe
+else
+	OCD_DIR ?= /usr/local/share/openocd/scripts
+	DFU = dfu-util
+    UNAME_S := $(shell uname -s)
+    ifeq ($(UNAME_S),Linux)
+		# May be needed later
+    endif
+    ifeq ($(UNAME_S),Darwin)
+		# Also may be needed later
+    endif
+endif
+
+######################################
 # OpenOCD stuff
 # TODO: add config.mk file for settings like programmer, etc.
 ######################################
 OCD=openocd
-OCD_DIR ?= /usr/local/share/openocd/scripts
 PGM_DEVICE ?= interface/stlink.cfg
 OCDFLAGS = -f $(PGM_DEVICE) -f target/$(CHIPSET).cfg
 
@@ -28,8 +46,6 @@ GDB_FLAGS=
 # optimization
 #OPT = -Og
 OPT ?= -O2
-
-
 
 ######################################
 # paths
@@ -274,7 +290,7 @@ program:
 #######################################
 
 program-dfu:
-	dfu-util -a 0 -s $(FLASH_ADDRESS):leave -D $(BUILD_DIR)/$(TARGET_BIN) -d ,0483:df11
+	$(DFU) -a 0 -s $(FLASH_ADDRESS):leave -D $(BUILD_DIR)/$(TARGET_BIN) -d ,0483:df11
 
 #######################################
 # dependencies

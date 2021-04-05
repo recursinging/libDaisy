@@ -210,6 +210,21 @@ C_SOURCES += core/startup_stm32h750xx.c
 #ASM_SOURCES =  \
 #$(STARTUP_PATH)/startup_stm32h750xx.s
 
+######################################
+# OS
+######################################
+ifeq ($(OS),Windows_NT)
+	GCC_PATH = ../DaisyToolchain/windows/bin
+else
+    UNAME_S := $(shell uname -s)
+    ifeq ($(UNAME_S),Linux)
+		# May be needed later
+    endif
+    ifeq ($(UNAME_S),Darwin)
+		# Also may be needed later
+    endif
+endif
+
 #######################################
 # binaries
 #######################################
