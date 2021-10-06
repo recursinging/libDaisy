@@ -7,15 +7,21 @@ using namespace daisy;
 
 #define UNUSED(x) (void)x
 
+/**
+ * This is a mock transport implementation with hooks for verifying the 
+ * SPI transactions invoked by the driver at the byte level.
+ */
 class TestTransport
 {
   public:
+    // These are our callback function defs.
     typedef std::function<bool(uint8_t* buff, size_t size, uint32_t wait_us)>
         TxCallback;
     typedef std::function<bool(uint8_t* tx_buff, uint8_t* rx_buff, size_t size)>
         TxRxCallback;
+
     /**
-     * Transport configuration struct for the MAX11300
+     * TestTransport configuration struct
      */
     struct Config
     {
@@ -62,10 +68,20 @@ class TestTransport
     TxRxCallback txrx_callback;
 };
 
+using MAX11300Test = daisy::MAX11300Driver<TestTransport>;
 
-class Max11300TestWrapper
+/**
+ * This is a helper class for persisting a structured set of SPI transactions, 
+ * which can then be verified when driver methods are invoked.
+ */
+class Max11300TestHelper
 {
   public:
+    /**
+     * This struct holds a TX SPI transaction with which the contents of "buff" will be
+     * compared, byte for byte, with the output of the driver.  If these do not match, 
+     * The test will fail.
+     */
     struct TxTransaction
     {
         std::string          description;
@@ -74,6 +90,14 @@ class Max11300TestWrapper
         uint32_t             wait;
     };
 
+    /**
+     * This struct holds a TXRX SPI transaction with which the contents of "tx_buff" will be
+     * compared, byte for byte, with the tx_buffer of the SPI transaction.  If these do not match, 
+     * The test will fail.
+     * 
+     * Bytes added to the "rx_buff" will be interpreted by the driver, as if they were received
+     * by the MAX11300 device itself, and can be used to further verify driver behavior.
+     */
     struct TxRxTransaction
     {
         std::string          description;
@@ -82,55 +106,139 @@ class Max11300TestWrapper
         size_t               size;
     };
 
-    Max11300TestWrapper() {}
-    ~Max11300TestWrapper() {}
+    Max11300TestHelper() {}
+    ~Max11300TestHelper() {}
 
+    /**
+     * Initializing this helper class also verifies the Init() routine of the driver.
+     */
     void Init()
     {
+        // This is the intial set of transactions called when "Init()" is invoked
+        TxRxTransaction txrx_device_id;
+        txrx_device_id.description = "Initial device ID verification";
+        txrx_device_id.tx_buff = {(MAX11300_DEVICE_ID << 1) | 1, 0x00, 0x00};
+        txrx_device_id.rx_buff
+            = {0x00, (uint8_t)(0x0424 >> 8), (uint8_t)0x0424};
+        txrx_device_id.size = 3;
+        txrx_transactions.emplace_back(txrx_device_id);
+
+        TxTransaction tx_devicectl;
+        tx_devicectl.description = "Initial device configuration";
+        tx_devicectl.buff        = {(MAX11300_DEVCTL << 1), 0x41, 0xF7};
+        tx_devicectl.size        = 3;
+        tx_devicectl.wait        = 0;
+        tx_transactions.emplace_back(tx_devicectl);
+
+        TxRxTransaction txrx_devicectl_verify;
+        txrx_devicectl_verify.description
+            = "Initial device configuration verification";
+        txrx_devicectl_verify.tx_buff
+            = {(MAX11300_DEVCTL << 1) | 1, 0x00, 0x00};
+        txrx_devicectl_verify.rx_buff = {0x00, 0x41, 0xF7};
+        txrx_devicectl_verify.size    = 3;
+        txrx_transactions.emplace_back(txrx_devicectl_verify);
+
+        for(size_t i = 0; i < MAX11300::Pin::PIN_LAST; i++)
+        {
+            // The initial pin config transactions
+            TxTransaction tx_pincfg;
+            tx_pincfg.description
+                = std::string("Pin config #").append(std::to_string(i));
+            tx_pincfg.buff
+                = {(uint8_t)((MAX11300_FUNC_BASE + i) << 1), 0x00, 0x00};
+            tx_pincfg.size = 3;
+            tx_pincfg.wait = 0;
+            tx_transactions.emplace_back(tx_pincfg);
+
+            // ...and their verification transactions
+            TxRxTransaction txrx_pincfg_verify;
+            txrx_pincfg_verify.description
+                = std::string("Pin config verification #")
+                      .append(std::to_string(i));
+            txrx_pincfg_verify.tx_buff
+                = {(uint8_t)(((MAX11300_FUNC_BASE + i) << 1) | 1), 0x00, 0x00};
+            txrx_pincfg_verify.rx_buff = {0x00, 0x00, 0x00};
+            txrx_pincfg_verify.size    = 3;
+            txrx_transactions.emplace_back(txrx_pincfg_verify);
+        }
+
+
         MAX11300Driver<TestTransport>::Config max11300_config;
         TestTransport::Config                 transport_config;
         transport_config.tx_callback     = tx_callback;
         transport_config.txrx_callback   = txrx_callback;
         max11300_config.transport_config = transport_config;
+
+        // Invoke the Init method now...
         max11300.Init(max11300_config);
+
+        // ...and clean up...
+        tx_transactions.clear();
+        txrx_transactions.clear();
+        tx_transaction_count   = 0;
+        txrx_transaction_count = 0;
     }
 
-    MAX11300Driver<TestTransport> max11300;
-    std::vector<TxTransaction>    tx_transactions;
-    std::vector<TxRxTransaction>  txrx_transactions;
+    /**
+     * The driver instance
+     */
+    MAX11300Test max11300;
+    /**
+     * A list of TX transaction fixtures which will be verified in the order they were added
+     */
+    std::vector<TxTransaction> tx_transactions;
+    /**
+     * A list of TXRX transaction fixtures which will be verified in the order they were added
+     */
+    std::vector<TxRxTransaction> txrx_transactions;
 
+    // Counters to keep track of how many transactions the driver has invoked
     size_t tx_transaction_count   = 0;
     size_t txrx_transaction_count = 0;
 
 
   private:
+    // This method verifies a TX transaction against a TxTransaction fixture
     void verifyTxTransaction(uint8_t* buff, size_t size, uint32_t wait_us)
     {
-        UNUSED(buff);
-        UNUSED(size);
+        // TODO, how to best verify wait_us?
         UNUSED(wait_us);
 
+        // Increment the tx count and make sure we have enough fixtures...
         tx_transaction_count++;
         if(tx_transactions.size() < tx_transaction_count)
         {
             FAIL() << "Missing TxTransaction fixture";
         }
+        // Get the transaction fixture
         TxTransaction t = tx_transactions.at(tx_transaction_count - 1);
+
+        // Verify that our fixture has the right transaction size...
+        if(t.size != size)
+        {
+            FAIL() << "TxTransaction fixture transaction size != actual "
+                      "transaction size: "
+                   << t.size << " != " << size;
+        }
 
         bool tx_valid = true;
 
+        // Here we build some useful output while verifying to help when things go wrong.
         std::string expecting = std::string("[  DETAIL  ] Expecting: ");
         std::string actual    = std::string("[  DETAIL  ] Actual   : ");
         for(std::size_t i = 0; i < size; ++i)
         {
+            // expected byte output
             std::bitset<8> x(t.buff[i]);
             expecting.append(x.to_string());
             expecting.append(" ");
-
+            // actual byte output
             std::bitset<8> a(buff[i]);
             actual.append(a.to_string());
             actual.append(" ");
 
+            // verify equality...
             if(buff[i] != t.buff[i])
             {
                 tx_valid = false;
@@ -139,6 +247,8 @@ class Max11300TestWrapper
 
         if(!tx_valid)
         {
+            // The expected and actual bytes did not match. Output them
+            // now to help visualize the problem...
             std::string message("[  DETAIL  ] Invalid TX: ");
             message.append(t.description);
             message.append("\n");
@@ -148,38 +258,44 @@ class Max11300TestWrapper
             message.append("\n");
             ADD_FAILURE() << message;
         }
-
-
     }
 
+    // This method verifies a TXRX transaction against a TxRxTransaction fixture
     void verifyTxRxTransaction(uint8_t* tx_buff, uint8_t* rx_buff, size_t size)
     {
-        UNUSED(tx_buff);
-        UNUSED(rx_buff);
-        UNUSED(size);
-
+        // Increment the txrx count and make sure we have enough fixtures...
         txrx_transaction_count++;
-
         if(txrx_transactions.size() < txrx_transaction_count)
         {
             FAIL() << "Missing TxRxTransaction fixture";
         }
+        // Get the transaction fixture
         TxRxTransaction t = txrx_transactions.at(txrx_transaction_count - 1);
+
+        // Verify that our fixture has the right transaction size...
+        if(t.size != size)
+        {
+            FAIL() << "TxRxTransaction fixture transaction size != actual "
+                      "transaction size: "
+                   << t.size << " != " << size;
+        }
 
         bool tx_valid = true;
 
+        // Here we build some useful output while verifying to help when things go wrong.
         std::string expecting = std::string("[  DETAIL  ] Expecting: ");
         std::string actual    = std::string("[  DETAIL  ] Actual   : ");
         for(std::size_t i = 0; i < size; ++i)
         {
+            // expected byte output
             std::bitset<8> x(t.tx_buff[i]);
             expecting.append(x.to_string());
             expecting.append(" ");
-
+            // actual byte output
             std::bitset<8> a(tx_buff[i]);
             actual.append(a.to_string());
             actual.append(" ");
-
+            // verify equality...
             if(tx_buff[i] != t.tx_buff[i])
             {
                 tx_valid = false;
@@ -188,6 +304,8 @@ class Max11300TestWrapper
 
         if(!tx_valid)
         {
+            // The expected and actual bytes did not match. Output them
+            // now to help visualize the problem...
             std::string message("[  DETAIL  ] Invalid TX: ");
             message.append(t.description);
             message.append("\n");
@@ -198,19 +316,21 @@ class Max11300TestWrapper
             ADD_FAILURE() << message;
         }
 
+        // Write the fixture rx_buff to the transation buffer now
         for(std::size_t i = 0; i < t.rx_buff.size(); ++i)
         {
             rx_buff[i] = t.rx_buff[i];
         }
     }
 
-
+    // Callback for tx transactions
     TestTransport::TxCallback tx_callback
         = [this](uint8_t* buff, size_t size, uint32_t wait_us) -> bool {
         verifyTxTransaction(buff, size, wait_us);
         return true;
     };
 
+    // Callback for txrx transactions
     TestTransport::TxRxCallback txrx_callback
         = [this](uint8_t* tx_buff, uint8_t* rx_buff, size_t size) -> bool {
         verifyTxRxTransaction(tx_buff, rx_buff, size);
@@ -219,33 +339,55 @@ class Max11300TestWrapper
 };
 
 
-TEST(dev_MAX11300, spiCommsInit)
+TEST(dev_MAX11300, verifyDriverInitializationRoutine)
 {
-    Max11300TestWrapper wrapper;
+    Max11300TestHelper helper;
+    helper.Init();
+}
 
-    Max11300TestWrapper::TxRxTransaction txrx_device_id;
-    txrx_device_id.description = "Initial device ID verification";
-    txrx_device_id.tx_buff = {(MAX11300_DEVICE_ID << 1) | 1, 0x00, 0x00};
-    txrx_device_id.rx_buff = {0x00, (uint8_t)(0x0424 >> 8), (uint8_t)0x0424};
-    txrx_device_id.size    = 3;
-    wrapper.txrx_transactions.emplace_back(txrx_device_id);
+TEST(dev_MAX11300, verifyDacPinConfiguration)
+{
+    Max11300TestHelper helper;
+    helper.Init();
 
-    Max11300TestWrapper::TxTransaction tx_devicectl;
-    tx_devicectl.description = "Initial device configuration";
-    tx_devicectl.buff = {(MAX11300_DEVCTL << 1), 0x41, 0xF7};
-    tx_devicectl.size = 3;
-    tx_devicectl.wait = 0;
-    wrapper.tx_transactions.emplace_back(tx_devicectl);
-
-    Max11300TestWrapper::TxRxTransaction txrx_devicectl_verify;
-    txrx_devicectl_verify.description = "Initial device configuration verification";
-    txrx_devicectl_verify.tx_buff = {(MAX11300_DEVCTL << 1) | 1, 0x00, 0x00};
-    txrx_devicectl_verify.rx_buff = {0x00, 0x41, 0xF7};
-    txrx_devicectl_verify.size    = 3;
-    wrapper.txrx_transactions.emplace_back(txrx_devicectl_verify);
+    // This is the pin configuration we'll be testing
+    MAX11300Test::Pin       pin = MAX11300Test::PIN_6;
+    MAX11300Test::PinConfig pin_cfg;
+    pin_cfg.Defaults();
+    pin_cfg.mode  = MAX11300Test::PinMode::ANALOG_OUT;
+    pin_cfg.range = MAX11300Test::VoltageRange::NEGATIVE_5_TO_5;
+    // We expect this to set the pin config register to 0x5200
 
 
-    wrapper.Init();
+    // We expect..
+    // The initial pin config reset transaction
+    Max11300TestHelper::TxTransaction tx_pincfgreset;
+    tx_pincfgreset.description = "High impedance pin reset transaction";
+    tx_pincfgreset.buff
+        = {(uint8_t)((MAX11300_FUNC_BASE + pin) << 1), 0x00, 0x00};
+    tx_pincfgreset.size = 3;
+    tx_pincfgreset.wait = 0;
+    helper.tx_transactions.emplace_back(tx_pincfgreset);
+
+    // The pin config transaction
+    Max11300TestHelper::TxTransaction tx_pincfg;
+    tx_pincfg.description = "Pin configuration transaction";
+    tx_pincfg.buff = {(uint8_t)((MAX11300_FUNC_BASE + pin) << 1), 0x52, 0x00};
+    tx_pincfg.size = 3;
+    tx_pincfg.wait = 0;
+    helper.tx_transactions.emplace_back(tx_pincfg);
+
+    // ...and the pin config verification transaction
+    Max11300TestHelper::TxRxTransaction txrx_pincfg_verify;
+    txrx_pincfg_verify.description = "Pin config verification transaction";
+    txrx_pincfg_verify.tx_buff
+        = {(uint8_t)(((MAX11300_FUNC_BASE + pin) << 1) | 1), 0x00, 0x00};
+    txrx_pincfg_verify.rx_buff = {0x00, 0x52, 0x00};
+    txrx_pincfg_verify.size    = 3;
+    helper.txrx_transactions.emplace_back(txrx_pincfg_verify);
+
+    ASSERT_EQ(helper.max11300.setPinConfig(pin, pin_cfg),
+              MAX11300Test::Result::OK);
 }
 
 
