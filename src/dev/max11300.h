@@ -68,7 +68,7 @@ class BlockingSpiTransport
     {
         // TODO implement timing...
         (void)wait_us;
-        
+
         if(spi_.BlockingTransmit(buff, size) == SpiHandle::Result::ERR)
         {
             return Result::ERR;
@@ -207,10 +207,7 @@ class MAX11300Driver
     struct Config
     {
         typename Transport::Config transport_config;
-        void Defaults()
-        {
-            transport_config.Defaults();
-        }
+        void                       Defaults() { transport_config.Defaults(); }
     };
 
     /**
@@ -282,10 +279,10 @@ class MAX11300Driver
             return Result::ERR;
         }
 
-        #ifndef UNIT_TEST
+#ifndef UNIT_TEST
         // Delay as recommended in the datasheet...
         System::DelayUs(200);
-        #endif
+#endif
 
         // Set all pins to the default high impedance state...
         for(uint8_t i = 0; i < Pin::PIN_LAST; i++)
@@ -386,7 +383,7 @@ class MAX11300Driver
         {
             return 0;
         }
-        return *pin_configurations_[pin].value;
+        return __builtin_bswap16(*pin_configurations_[pin].value);
     }
 
     /**
@@ -414,7 +411,7 @@ class MAX11300Driver
     {
         if(pin_configurations_[pin].value != nullptr)
         {
-            *pin_configurations_[pin].value = raw_value;
+            *pin_configurations_[pin].value = __builtin_bswap16(raw_value);
         }
     }
 
@@ -664,12 +661,11 @@ class MAX11300Driver
         for(uint8_t i = 0; i < Pin::PIN_LAST; i++)
         {
             Pin       pin     = static_cast<Pin>(i);
-            PinConfig pin_cfg = pin_configurations_[i];
 
             // Always reset the value pointer first...
-            pin_cfg.value = nullptr;
+            pin_configurations_[i].value = nullptr;
 
-            if(pin_cfg.mode == PinMode::ANALOG_OUT)
+            if(pin_configurations_[i].mode == PinMode::ANALOG_OUT)
             {
                 dac_pin_count_++;
                 if(dac_pin_count_ == 1)
@@ -677,14 +673,14 @@ class MAX11300Driver
                     // If this is the first pin of this type, we need to set
                     // the initial address of the dac_buffer_ to point at this pin.
                     // The ordering of subsequent pins is known by the MAX11300.
-                    dac_buffer_[0] = MAX11300_DACDAT_BASE + pin;
+                    dac_buffer_[0] = (MAX11300_DACDAT_BASE + pin) << 1;
                 }
                 // set the pin_config.value to a pointer at the appropriate
                 // index of the dac_buffer...
-                pin_cfg.value = reinterpret_cast<uint16_t*>(
+                pin_configurations_[i].value = reinterpret_cast<uint16_t*>(
                     &dac_buffer_[(2 * dac_pin_count_) - 1]);
             }
-            else if(pin_cfg.mode == PinMode::ANALOG_IN)
+            else if(pin_configurations_[i].mode == PinMode::ANALOG_IN)
             {
                 adc_pin_count_++;
                 if(dac_pin_count_ == 1)
@@ -692,18 +688,18 @@ class MAX11300Driver
                     // If this is the first pin of this type, we need to set
                     // the initial address of the adc_buffer_ to point at this pin.
                     // The ordering of subsequent pins is known by the MAX11300.
-                    dac_buffer_[0] = MAX11300_ADCDAT_BASE + pin;
+                    adc_buffer_[0] = (MAX11300_ADCDAT_BASE + pin) << 1;
                 }
                 // set the pin_config.value to a pointer at the appropriate
                 // index of the adc_buffer...
-                pin_cfg.value = reinterpret_cast<uint16_t*>(
+                pin_configurations_[i].value = reinterpret_cast<uint16_t*>(
                     &adc_buffer_[(2 * adc_pin_count_) - 1]);
             }
-            else if(pin_cfg.mode == PinMode::GPI)
+            else if(pin_configurations_[i].mode == PinMode::GPI)
             {
                 gpo_pin_count_++;
             }
-            else if(pin_cfg.mode == PinMode::GPO)
+            else if(pin_configurations_[i].mode == PinMode::GPO)
             {
                 gpo_pin_count_++;
             }
