@@ -440,7 +440,18 @@ class MAX11300Driver
      */
     bool readDigitalPin(Pin pin)
     {
-        return static_cast<bool>((gpi_state_ >> pin) & 1);
+        if(pin > Pin::PIN_15)
+        {
+            return static_cast<bool>((gpo_buffer_[4] << (pin - 16)) & 1);
+        }
+        else if(pin > Pin::PIN_7)
+        {
+            return static_cast<bool>((gpo_buffer_[1] << (pin - 8)) & 1);
+        }
+        else
+        {
+            return static_cast<bool>((gpo_buffer_[2] << pin) & 1);
+        }
     }
 
     /**
@@ -453,13 +464,37 @@ class MAX11300Driver
      */
     void writeDigitalPin(Pin pin, bool value)
     {
+        // (void) pin;
+        // (void) value;
         if(value)
         {
-            gpo_state_ |= (1 << pin);
+            if(pin > Pin::PIN_15)
+            {
+                gpo_buffer_[4] |= (1 << (pin - 16));
+            }
+            else if(pin > Pin::PIN_7)
+            {
+                gpo_buffer_[1] |= (1 << (pin - 8));
+            }
+            else
+            {
+                gpo_buffer_[2] |= (1 << pin);
+            }
         }
         else
         {
-            gpo_state_ &= ~(1 << pin);
+            if(pin > Pin::PIN_15)
+            {
+                gpo_buffer_[4] &= ~(1 << (pin - 16));
+            }
+            else if(pin > Pin::PIN_7)
+            {
+                gpo_buffer_[1] &= ~(1 << (pin - 8));
+            }
+            else
+            {
+                gpo_buffer_[2] &= ~(1 << pin);
+            }
         }
     }
 
@@ -505,9 +540,6 @@ class MAX11300Driver
             // Reading ADC pins is a burst transaction approximately the same as the DAC transaction
             // as described above...
             size_t size = (adc_pin_count_ * 2) + 1;
-            // TODO check if it's possible to just use the same buffer for TX and RX...
-            uint8_t tx_buffer[size] = {};
-            tx_buffer[0]            = adc_buffer_[0];
             if(transport_.TransmitAndReceive(adc_buffer_, adc_buffer_, size)
                != Transport::Result::OK)
             {
@@ -520,12 +552,7 @@ class MAX11300Driver
             // Writing GPO pins is a single 5 byte transaction, with the first byte being the
             // the GPO data register, and the subsequent 4 bytes containing the state of the
             // GPO ports to be written.
-            uint8_t tx_buff[5];
-            tx_buff[0] = MAX11300_GPODAT; // The GPO data register
-            // Write our state container to the last four bytes of the tx_buffer...
-            uint32_t* state_p = reinterpret_cast<uint32_t*>(&tx_buff[1]);
-            *state_p          = gpo_state_;
-            if(transport_.Transmit(tx_buff, sizeof(tx_buff), 0)
+            if(transport_.Transmit(gpo_buffer_, sizeof(gpo_buffer_), 0)
                != Transport::Result::OK)
             {
                 return Result::ERR;
@@ -535,18 +562,12 @@ class MAX11300Driver
         if(gpi_pin_count_ > 0)
         {
             // Reading GPI pins is a single, 5 byte, full-duplex transaction with the first
-            // and only TX byte being the GPI register. The subsequent 4 bytes are read
-            // and persisted as bits in a 32 bit unsigned integer.
-            uint8_t rx_buff[5];
-            uint8_t tx_buff[5];
-            tx_buff[0] = MAX11300_GPIDAT; // The GPI data register
-            if(transport_.TransmitAndReceive(tx_buff, rx_buff, sizeof(rx_buff))
+            // and only TX byte being the GPI register.
+            if(transport_.TransmitAndReceive(gpi_buffer_, gpi_buffer_, sizeof(gpi_buffer_))
                != Transport::Result::OK)
             {
                 return Result::ERR;
             }
-            uint32_t* state_p = reinterpret_cast<uint32_t*>(&rx_buff[1]);
-            gpi_state_        = *state_p;
         }
 
         return Result::OK;
@@ -649,9 +670,8 @@ class MAX11300Driver
         // Zero everything out...
         memset(dac_buffer_, 0, sizeof(dac_buffer_));
         memset(adc_buffer_, 0, sizeof(adc_buffer_));
-
-        gpi_state_ = 0;
-        gpo_state_ = 0;
+        memset(gpi_buffer_, 0, sizeof(gpi_buffer_));
+        memset(gpo_buffer_, 0, sizeof(gpo_buffer_));
 
         dac_pin_count_ = 0;
         adc_pin_count_ = 0;
@@ -660,7 +680,7 @@ class MAX11300Driver
 
         for(uint8_t i = 0; i < Pin::PIN_LAST; i++)
         {
-            Pin       pin     = static_cast<Pin>(i);
+            Pin pin = static_cast<Pin>(i);
 
             // Always reset the value pointer first...
             pin_configurations_[i].value = nullptr;
@@ -683,12 +703,12 @@ class MAX11300Driver
             else if(pin_configurations_[i].mode == PinMode::ANALOG_IN)
             {
                 adc_pin_count_++;
-                if(dac_pin_count_ == 1)
+                if(adc_pin_count_ == 1)
                 {
                     // If this is the first pin of this type, we need to set
                     // the initial address of the adc_buffer_ to point at this pin.
                     // The ordering of subsequent pins is known by the MAX11300.
-                    adc_buffer_[0] = (MAX11300_ADCDAT_BASE + pin) << 1;
+                    adc_buffer_[0] = ((MAX11300_ADCDAT_BASE + pin) << 1) | 1;
                 }
                 // set the pin_config.value to a pointer at the appropriate
                 // index of the adc_buffer...
@@ -697,11 +717,13 @@ class MAX11300Driver
             }
             else if(pin_configurations_[i].mode == PinMode::GPI)
             {
-                gpo_pin_count_++;
+                gpi_pin_count_++;
+                gpi_buffer_[0] = (MAX11300_GPIDAT << 1) | 1;
             }
             else if(pin_configurations_[i].mode == PinMode::GPO)
             {
                 gpo_pin_count_++;
+                gpo_buffer_[0] = (MAX11300_GPODAT << 1);
             }
         }
 
@@ -818,9 +840,9 @@ class MAX11300Driver
 
     uint8_t adc_buffer_[41];
 
-    uint32_t gpi_state_;
+    uint8_t gpi_buffer_[5];
 
-    uint32_t gpo_state_;
+    uint8_t gpo_buffer_[5];
 
     Transport transport_;
 };
