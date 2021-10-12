@@ -74,12 +74,22 @@ class BlockingSpiTransport
     {
         if(wait_us > 0)
         {
+            uint32_t ts = System::GetUs();
             // Since this is a transaction which requires a delay
             // we check if enough time has elapsed, if not, we simply
             // return "OK".
-            if(System::GetUs() < next_tx_)
+            if(ts < next_tx_)
             {
-                return Result::OK;
+                // Check if the clock rolled over, the max wait time is 20*80us
+                if((next_tx_ - ts) > 1600)
+                {
+                    next_tx_ = ts + wait_us;
+                    return Result::OK;
+                }
+                else
+                {
+                    return Result::OK;
+                }
             }
         }
 
@@ -566,11 +576,16 @@ class MAX11300Driver
             // Reading ADC pins is a burst transaction approximately the same as the DAC transaction
             // as described above...
             size_t size = (adc_pin_count_ * 2) + 1;
-            if(transport_.TransmitAndReceive(adc_buffer_, adc_buffer_, size)
+            
+            uint8_t tx_buff[size] = {};
+            tx_buff[0] = adc_buffer_[0];
+            if(transport_.TransmitAndReceive(tx_buff, adc_buffer_, size)
                != Transport::Result::OK)
             {
+                adc_buffer_[0] = tx_buff[0];
                 return Result::ERR;
             }
+            adc_buffer_[0] = tx_buff[0];
         }
 
         if(gpo_pin_count_ > 0)
@@ -589,12 +604,16 @@ class MAX11300Driver
         {
             // Reading GPI pins is a single, 5 byte, full-duplex transaction with the first
             // and only TX byte being the GPI register.
+            uint8_t tx_buff[sizeof(gpi_buffer_)] = {};
+            tx_buff[0] = gpi_buffer_[0];
             if(transport_.TransmitAndReceive(
-                   gpi_buffer_, gpi_buffer_, sizeof(gpi_buffer_))
+                   tx_buff, gpi_buffer_, sizeof(gpi_buffer_))
                != Transport::Result::OK)
             {
+                gpi_buffer_[0] = tx_buff[0];
                 return Result::ERR;
             }
+            gpi_buffer_[0] = tx_buff[0];
         }
 
         return Result::OK;
