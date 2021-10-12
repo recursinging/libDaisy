@@ -126,8 +126,8 @@ class BlockingSpiTransport
 
 /**
  * @brief Device Driver for the MAX11300 20 port ADC/DAC/GPIO device.
- * @author sbraam
- * @date August 2021
+ * @author sam.braam
+ * @date Oct. 2021
  * 
  * This is a highly opinionated driver implementation for the MAX11300
  * DAC/ADC/GPIO device.  

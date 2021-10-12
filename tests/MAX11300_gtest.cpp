@@ -109,11 +109,6 @@ class Max11300TestHelper : public ::testing::Test
     Max11300TestHelper() {}
     ~Max11300TestHelper() {}
 
-    // void SetUp()
-    // {
-    //     std::cout << "Setup\n";
-    // }
-
     /**
      * Initializing this helper class also verifies the Init() routine of the driver.
      */
