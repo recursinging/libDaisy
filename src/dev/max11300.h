@@ -6,7 +6,6 @@
 #include "per/spi.h"
 #include "sys/system.h"
 #include <string.h>
-#include <bitset>
 
 // Some register definitions
 #define MAX11300_DEVICE_ID 0x00
