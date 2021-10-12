@@ -6,6 +6,7 @@
 #include "per/spi.h"
 #include "sys/system.h"
 #include <string.h>
+#include <bitset>
 
 // Some register definitions
 #define MAX11300_DEVICE_ID 0x00
@@ -59,19 +60,38 @@ class BlockingSpiTransport
         ERR /**< & */
     };
 
-    void Init(Config config) { spi_.Init(config.spi_config); }
+    void Init(Config config)
+    {
+        spi_.Init(config.spi_config);
+        next_tx_ = System::GetUs();
+        ready_   = true;
+    }
 
-    bool Ready() { return true; }
+    bool Ready() { return ready_; }
 
     BlockingSpiTransport::Result
     Transmit(uint8_t* buff, size_t size, uint32_t wait_us)
     {
-        // TODO implement timing...
-        (void)wait_us;
+        if(wait_us > 0)
+        {
+            // Since this is a transaction which requires a delay
+            // we check if enough time has elapsed, if not, we simply
+            // return "OK".
+            if(System::GetUs() < next_tx_)
+            {
+                return Result::OK;
+            }
+        }
 
         if(spi_.BlockingTransmit(buff, size) == SpiHandle::Result::ERR)
         {
             return Result::ERR;
+        }
+
+        if(wait_us > 0)
+        {
+            // Reset next_tx timestamp
+            next_tx_ = System::GetUs() + wait_us;
         }
         return Result::OK;
     }
@@ -90,6 +110,8 @@ class BlockingSpiTransport
 
   private:
     SpiHandle spi_;
+    uint32_t  next_tx_;
+    bool      ready_ = false;
 };
 
 /**
@@ -442,15 +464,15 @@ class MAX11300Driver
     {
         if(pin > Pin::PIN_15)
         {
-            return static_cast<bool>((gpo_buffer_[4] << (pin - 16)) & 1);
+            return static_cast<bool>((gpi_buffer_[4] >> (pin - 16)) & 1);
         }
         else if(pin > Pin::PIN_7)
         {
-            return static_cast<bool>((gpo_buffer_[1] << (pin - 8)) & 1);
+            return static_cast<bool>((gpi_buffer_[1] >> (pin - 8)) & 1);
         }
         else
         {
-            return static_cast<bool>((gpo_buffer_[2] << pin) & 1);
+            return static_cast<bool>((gpi_buffer_[2] >> pin) & 1);
         }
     }
 
@@ -527,8 +549,12 @@ class MAX11300Driver
             //
             // The size of the transaction is determined by the number of configured dac pins,
             // plus one byte for the initial pin address.
+            //
+            // The datasheet recommends waiting 80us between DAC updates, in practice the appears to be
+            // per configured DAC pin. Here we inform the transport to wait at least N uS before transmitting
+            // again.
             size_t tx_size = (dac_pin_count_ * 2) + 1;
-            if(transport_.Transmit(dac_buffer_, tx_size, 0)
+            if(transport_.Transmit(dac_buffer_, tx_size, (dac_pin_count_ * 80))
                != Transport::Result::OK)
             {
                 return Result::ERR;
@@ -563,7 +589,8 @@ class MAX11300Driver
         {
             // Reading GPI pins is a single, 5 byte, full-duplex transaction with the first
             // and only TX byte being the GPI register.
-            if(transport_.TransmitAndReceive(gpi_buffer_, gpi_buffer_, sizeof(gpi_buffer_))
+            if(transport_.TransmitAndReceive(
+                   gpi_buffer_, gpi_buffer_, sizeof(gpi_buffer_))
                != Transport::Result::OK)
             {
                 return Result::ERR;
