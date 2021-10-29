@@ -40,6 +40,11 @@ class SpiHandle::Impl
 
     Result BlockingTransmit(uint8_t* buff, size_t size, uint32_t timeout);
     Result BlockingReceive(uint8_t* buffer, uint16_t size, uint32_t timeout);
+    Result BlockingTransmitAndReceive(uint8_t* tx_buff,
+                                      uint8_t* rx_buff,
+                                      size_t   size,
+                                      uint32_t timeout);
+
     Result DmaTransmit(uint8_t*                       buff,
                        size_t                         size,
                        SpiHandle::CallbackFunctionPtr callback,
@@ -48,10 +53,11 @@ class SpiHandle::Impl
                       size_t                         size,
                       SpiHandle::CallbackFunctionPtr callback,
                       void*                          callback_context);
-    Result BlockingTransmitAndReceive(uint8_t* tx_buff,
-                                      uint8_t* rx_buff,
-                                      size_t   size,
-                                      uint32_t timeout);
+    Result DmaTransmitAndReceive(uint8_t*                       tx_buff,
+                                 uint8_t*                       rx_buff,
+                                 size_t                         size,
+                                 SpiHandle::CallbackFunctionPtr callback,
+                                 void* callback_context);
 
 
     Result InitPins();
@@ -66,6 +72,12 @@ class SpiHandle::Impl
                       size_t                         size,
                       SpiHandle::CallbackFunctionPtr callback,
                       void*                          callback_context);
+
+    Result StartDmaTxRx(uint8_t*                       tx_buff,
+                        uint8_t*                       rx_buff,
+                        size_t                         size,
+                        SpiHandle::CallbackFunctionPtr callback,
+                        void*                          callback_context);
 
     static void GlobalInit();
     static bool IsDmaBusy();
@@ -543,6 +555,45 @@ SpiHandle::Impl::StartDmaRx(uint8_t*                       buff,
     }
     return SpiHandle::Result::OK;
 }
+
+SpiHandle::Result
+SpiHandle::Impl::DmaTransmitAndReceive(uint8_t*                       tx_buff,
+                                       uint8_t*                       rx_buff,
+                                       size_t                         size,
+                                       SpiHandle::CallbackFunctionPtr callback,
+                                       void* callback_context)
+{
+}
+
+SpiHandle::Result
+SpiHandle::Impl::StartDmaTxRx(uint8_t*                       tx_buff,
+                              uint8_t*                       rx_buff,
+                              size_t                         size,
+                              SpiHandle::CallbackFunctionPtr callback,
+                              void*                          callback_context)
+{
+    // TODO This needs to be extended to cover both TX and RX, and will require re-arranging the
+    // DMA channel and stream assignment for the entire peripheral...
+    //InitDma(SpiHandle::DmaDirection::RX);
+
+    while(HAL_SPI_GetState(&hspi_) != HAL_SPI_STATE_READY) {};
+
+    ScopedIrqBlocker block;
+
+    dma_active_peripheral_ = int(config_.periph);
+    next_callback_         = callback;
+    next_callback_context_ = callback_context;
+
+    if(HAL_SPI_TransmitReceive_DMA(&hspi_, tx_buff, rx_buff, size) != HAL_OK)
+    {
+        dma_active_peripheral_ = -1;
+        next_callback_         = NULL;
+        next_callback_context_ = NULL;
+        return SpiHandle::Result::ERR;
+    }
+    return SpiHandle::Result::OK;
+}
+
 
 SpiHandle::Result SpiHandle::Impl::BlockingTransmitAndReceive(uint8_t* tx_buff,
                                                               uint8_t* rx_buff,

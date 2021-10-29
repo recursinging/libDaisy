@@ -123,6 +123,92 @@ class BlockingSpiTransport
     bool      ready_ = false;
 };
 
+
+class DmaSpiTransport
+{
+  public:
+    /**
+     * Transport configuration struct for the MAX11300
+     */
+    struct Config
+    {
+        SpiHandle::Config spi_config; /**< & */
+
+        /**
+         * Default configuration for the MAX11300 using the SPI_1 peripheral
+         * and its default pinout.
+         */
+        void Defaults()
+        {
+            spi_config.periph         = SpiHandle::Config::Peripheral::SPI_1;
+            spi_config.mode           = SpiHandle::Config::Mode::MASTER;
+            spi_config.direction      = SpiHandle::Config::Direction::TWO_LINES;
+            spi_config.datasize       = 8;
+            spi_config.clock_polarity = SpiHandle::Config::ClockPolarity::LOW;
+            spi_config.clock_phase    = SpiHandle::Config::ClockPhase::ONE_EDGE;
+            spi_config.nss            = SpiHandle::Config::NSS::HARD_OUTPUT;
+            spi_config.baud_prescaler = SpiHandle::Config::BaudPrescaler::PS_2;
+            spi_config.pin_config.nss = {DSY_GPIOG, 10};  // Pin 7
+            spi_config.pin_config.sclk = {DSY_GPIOG, 11}; // Pin 8
+            spi_config.pin_config.miso = {DSY_GPIOB, 4};  // Pin 9
+            spi_config.pin_config.mosi = {DSY_GPIOB, 5};  // Pin 10
+        }
+    };
+
+    enum class Result
+    {
+        OK, /**< & */
+        ERR /**< & */
+    };
+
+    void Init(Config config)
+    {
+        spi_.Init(config.spi_config);
+        next_tx_ = System::GetUs();
+        ready_   = true;
+    }
+
+    bool Ready() { return ready_; }
+
+    static void DmaTransmitCallback(void* context, SpiHandle::Result result)
+    {
+        // TODO
+    }
+
+    static void DmaTransmitAndReceiveCallback(void*             context,
+                                              SpiHandle::Result result)
+    {
+        // TODO
+    }
+
+    DmaSpiTransport::Result
+    Transmit(uint8_t* buff, size_t size, uint32_t wait_us)
+    {
+        // TODO handle wait_us
+        
+        spi_.DmaTransmit(
+            buff, size, DmaSpiTransport::DmaTransmitCallback, this);
+        return Result::OK;
+    }
+
+    DmaSpiTransport::Result
+    TransmitAndReceive(uint8_t* tx_buff, uint8_t* rx_buff, size_t size)
+    {
+        spi_.DmaTransmitAndReceive(
+            tx_buff,
+            rx_buff,
+            size,
+            DmaSpiTransport::DmaTransmitAndReceiveCallback,
+            this);
+        return Result::OK;
+    }
+
+  private:
+    SpiHandle spi_;
+    uint32_t  next_tx_;
+    bool      ready_ = false;
+};
+
 /**
  * @brief Device Driver for the MAX11300 20 port ADC/DAC/GPIO device.
  * @author sam.braam
