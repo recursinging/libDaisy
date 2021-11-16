@@ -6,6 +6,7 @@
 #include "per/spi.h"
 #include "sys/system.h"
 #include <cstring>
+#include "sys/dma.h"
 
 // Some register definitions
 #define MAX11300_DEVICE_ID 0x00
@@ -21,6 +22,126 @@ namespace daisy
 /** @addtogroup dac
     @{
     */
+
+
+class DmaSpiTransport
+{
+  public:
+    /**
+     * Transport configuration struct for the MAX11300
+     */
+    struct Config
+    {
+        SpiHandle::Config spi_config; /**< & */
+
+        /**
+         * Default configuration for the MAX11300 using the SPI_1 peripheral
+         * and its default pinout.
+         */
+        void Defaults()
+        {
+            spi_config.periph         = SpiHandle::Config::Peripheral::SPI_1;
+            spi_config.mode           = SpiHandle::Config::Mode::MASTER;
+            spi_config.direction      = SpiHandle::Config::Direction::TWO_LINES;
+            spi_config.datasize       = 8;
+            spi_config.clock_polarity = SpiHandle::Config::ClockPolarity::LOW;
+            spi_config.clock_phase    = SpiHandle::Config::ClockPhase::ONE_EDGE;
+            spi_config.nss            = SpiHandle::Config::NSS::HARD_OUTPUT;
+            spi_config.baud_prescaler = SpiHandle::Config::BaudPrescaler::PS_2;
+            spi_config.pin_config.nss = {DSY_GPIOG, 10};  // Pin 7
+            spi_config.pin_config.sclk = {DSY_GPIOG, 11}; // Pin 8
+            spi_config.pin_config.miso = {DSY_GPIOB, 4};  // Pin 9
+            spi_config.pin_config.mosi = {DSY_GPIOB, 5};  // Pin 10
+        }
+    };
+
+    enum class Result
+    {
+        OK, /**< & */
+        ERR /**< & */
+    };
+
+    void Init(Config config)
+    {
+        spi_.Init(config.spi_config);
+        next_tx_ = System::GetUs();
+        ready_   = true;
+    }
+
+    bool Ready() { return ready_; }
+
+    static void DmaTxCallback(void* context, SpiHandle::Result result)
+    {
+        (void)context;
+        (void)result;
+    }
+
+    static void DmaTxRxCallback(void* context, SpiHandle::Result result)
+    {
+        (void)context;
+        (void)result;
+    }
+
+    DmaSpiTransport::Result
+    Transmit(uint8_t* buff, size_t size, uint32_t wait_us)
+    {
+        if(wait_us > 0)
+        {
+            uint32_t ts = System::GetUs();
+            // Since this is a transaction which requires a delay
+            // we check if enough time has elapsed, if not, we simply
+            // return "OK".
+            if(ts < next_tx_)
+            {
+                // Check if the clock rolled over, the max wait time is 20*40us
+                if((next_tx_ - ts) > (20 * 40))
+                {
+                    next_tx_ = ts + wait_us;
+                    return Result::OK;
+                }
+                else
+                {
+                    return Result::OK;
+                }
+            }
+        }
+
+        dsy_dma_clear_cache_for_buffer(buff, size);
+        if(spi_.DmaTransmit(buff, size, &DmaTxCallback, this)
+           == SpiHandle::Result::ERR)
+        {
+            return Result::ERR;
+        }
+
+        if(wait_us > 0)
+        {
+            // Reset next_tx timestamp
+            next_tx_ = System::GetUs() + wait_us;
+        }
+        return Result::OK;
+    }
+
+    DmaSpiTransport::Result
+    TransmitAndReceive(uint8_t* tx_buff, uint8_t* rx_buff, size_t size)
+    {
+        dsy_dma_clear_cache_for_buffer(tx_buff, size);
+        dsy_dma_invalidate_cache_for_buffer(rx_buff, size);
+        if(spi_.DmaTransmitAndReceive(
+               tx_buff, rx_buff, size, &DmaTxRxCallback, this)
+           == SpiHandle::Result::ERR)
+        {
+            return Result::ERR;
+        }
+
+        return Result::OK;
+    }
+
+  private:
+    SpiHandle spi_;
+    uint32_t  next_tx_;
+    bool      ready_ = false;
+};
+
 
 class BlockingSpiTransport
 {

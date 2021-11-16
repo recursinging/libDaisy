@@ -109,8 +109,9 @@ class SpiHandle
 
     enum class DmaDirection
     {
-        RX, /**< & */
-        TX, /**< & */
+        RX,   /**< & */
+        TX,   /**< & */
+        TXRX, /**< & */
     };
 
     /** Initializes handler */
@@ -170,6 +171,20 @@ class SpiHandle
                       size_t                         size,
                       SpiHandle::CallbackFunctionPtr callback,
                       void*                          callback_context);
+
+    /** DMA-based transmit and receive 
+    \param *tx_buff the transmit buffer
+    \param *rx_buff the receive buffer
+    \param size  transaction size
+    \param callback     A callback to execute when the transfer finishes, or NULL.
+    \param callback_context A pointer that will be passed back to you in the callback.    
+    \return Whether the receive was successful or not
+    */
+    Result DmaTransmitAndReceive(uint8_t*                       tx_buff,
+                                 uint8_t*                       rx_buff,
+                                 size_t                         size,
+                                 SpiHandle::CallbackFunctionPtr callback,
+                                 void* callback_context);
 
     /** \return the result of HAL_SPI_GetError() to the user. */
     int CheckError();
