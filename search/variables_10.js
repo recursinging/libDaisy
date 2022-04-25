@@ -1,21 +1,11 @@
 var searchData=
 [
-  ['samplerate_0',['SampleRate',['../structdaisy_1_1_w_a_v___format_type_def.html#af94f78ad6e950a2084e143fdc4b4ba04',1,'daisy::WAV_FormatTypeDef']]],
-  ['scl_1',['scl',['../structdaisy_1_1_i2_c_handle_1_1_config.html#a168960729dc107c030c3a7cfe5c4b138',1,'daisy::I2CHandle::Config']]],
-  ['sclk_2',['sclk',['../structdaisy_1_1_spi_handle_1_1_config.html#a2f789b2a42c5a05c271b01e735aebcde',1,'daisy::SpiHandle::Config']]],
-  ['screensavertimeout_3',['screenSaverTimeOut',['../structdaisy_1_1_ui_canvas_descriptor.html#a467cc6b1c0e64d27a392c65ac977abb3',1,'daisy::UiCanvasDescriptor']]],
-  ['sda_4',['sda',['../structdaisy_1_1_i2_c_handle_1_1_config.html#a8d0a82df1f49113e5e4e2aff071e16e3',1,'daisy::I2CHandle::Config']]],
-  ['sdram_5fhandle_5',['sdram_handle',['../classdaisy_1_1_daisy_seed.html#a48b3da45f3fda4a6960cc15f427daa96',1,'daisy::DaisySeed']]],
-  ['seed_6',['seed',['../classdaisy_1_1_daisy_patch.html#a4705ca24e5ebc4d8add7d83232162fd7',1,'daisy::DaisyPatch::seed()'],['../classdaisy_1_1_daisy_petal.html#a2ef75f14bf008985bf6635e9ce87106a',1,'daisy::DaisyPetal::seed()'],['../classdaisy_1_1_daisy_pod.html#a75907b96ea78262bf52dd7b565136f58',1,'daisy::DaisyPod::seed()']]],
-  ['selecteditemidx_5f_7',['selectedItemIdx_',['../classdaisy_1_1_abstract_menu.html#a452a319456f718cc729207ce803fe4a4',1,'daisy::AbstractMenu']]],
-  ['song_8',['song',['../structdaisy_1_1_song_select_event.html#ab8348fcb912c6ba63200a15eb0386975',1,'daisy::SongSelectEvent']]],
-  ['speed_9',['speed',['../structdaisy_1_1_i2_c_handle_1_1_config.html#a7795ab9b3b85bd2f51950b6985a31b97',1,'daisy::I2CHandle::Config']]],
-  ['spi_5fconfig_10',['spi_config',['../group__dac.html#ga61d2e79b899930fc55cd7b897506b15e',1,'daisy::BlockingSpiTransport::Config']]],
-  ['subchunk1id_11',['SubChunk1ID',['../structdaisy_1_1_w_a_v___format_type_def.html#a027b8307b27f1648d55fbcc9be8fa02f',1,'daisy::WAV_FormatTypeDef']]],
-  ['subchunk1size_12',['SubChunk1Size',['../structdaisy_1_1_w_a_v___format_type_def.html#a3f00bebc16e12c569d7a30d4d0da5abc',1,'daisy::WAV_FormatTypeDef']]],
-  ['subchunk2id_13',['SubChunk2ID',['../structdaisy_1_1_w_a_v___format_type_def.html#ae31021692b18b35a7f33e9e5e8d0a3f1',1,'daisy::WAV_FormatTypeDef']]],
-  ['subchunk2size_14',['SubCHunk2Size',['../structdaisy_1_1_w_a_v___format_type_def.html#a93968350c8f1abcd287e79ded8b6a81d',1,'daisy::WAV_FormatTypeDef']]],
-  ['switches_15',['switches',['../classdaisy_1_1_daisy_petal.html#a4c23c5086d0620b98c2d4a86fde53af2',1,'daisy::DaisyPetal']]],
-  ['sysex_5fdata_16',['sysex_data',['../structdaisy_1_1_midi_event.html#a3832d8ac412e42359eff562b56362cbb',1,'daisy::MidiEvent']]],
-  ['system_17',['system',['../classdaisy_1_1patch__sm_1_1_daisy_patch_s_m.html#aee9989e96b489f7726676140ac0b9c26',1,'daisy::patch_sm::DaisyPatchSM']]]
+  ['raw_5fdata_0',['raw_data',['../structdaisy_1_1_wav_file_info.html#ad1e3c8f4c720cbbdfbdf26b5a2ea2903',1,'daisy::WavFileInfo']]],
+  ['relcardadd_1',['RelCardAdd',['../struct_d_s_y___s_d___card_info_type_def.html#a5c530fb4ff9a3032125d75a44e9b0a0a',1,'DSY_SD_CardInfoTypeDef']]],
+  ['reset_2',['reset',['../structdaisy_1_1_s_s_d130x4_wire_spi_transport_1_1_config.html#a3040b9e73290c3c0d562169b5f630c0e',1,'daisy::SSD130x4WireSpiTransport::Config']]],
+  ['rightbttnid_3',['rightBttnId',['../structdaisy_1_1_u_i_1_1_special_control_ids.html#a8a771125e84075486d861414aec5bdb5',1,'daisy::UI::SpecialControlIds']]],
+  ['ring_5fled_4',['ring_led',['../classdaisy_1_1_daisy_petal.html#a24abaac2327c0057f99b5d5a4f15bd5a',1,'daisy::DaisyPetal']]],
+  ['rs_5',['rs',['../structdaisy_1_1_lcd_h_d44780_1_1_config.html#a2c6c623ffd463f0de93f2eb6706cffd3',1,'daisy::LcdHD44780::Config']]],
+  ['rx_6',['rx',['../structdaisy_1_1_midi_uart_transport_1_1_config.html#a84c3f711773c994ae22fbb3969573a11',1,'daisy::MidiUartTransport::Config::rx()'],['../structdaisy_1_1_uart_handler_1_1_config.html#adb318e26f13636e1bee740fa47497392',1,'daisy::UartHandler::Config::rx()']]],
+  ['rx_5fbuffer_7',['rx_buffer',['../structdaisy_1_1_m_a_x11300_types_1_1_dma_buffer.html#abdc1eea126a4dca4ecc83c41ed988758',1,'daisy::MAX11300Types::DmaBuffer']]]
 ];

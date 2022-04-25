@@ -1,9 +1,9 @@
 var searchData=
 [
   ['back_0',['Back',['../classdaisy_1_1_f_i_f_o_base.html#a8b541afcf88dfb8c77692a3ac006f69e',1,'daisy::FIFOBase::Back() const'],['../classdaisy_1_1_f_i_f_o_base.html#a764e49d0b92d74bb96c945f26301d885',1,'daisy::FIFOBase::Back()']]],
-  ['blockingreceive_1',['BlockingReceive',['../classdaisy_1_1_spi_handle.html#a91106fe656c12d5b7be7858bcb2c6d16',1,'daisy::SpiHandle']]],
-  ['blockingtransmit_2',['BlockingTransmit',['../classdaisy_1_1_spi_handle.html#a89ccde60807d2681bc96425c0600c82d',1,'daisy::SpiHandle']]],
-  ['blockingtransmitandreceive_3',['BlockingTransmitAndReceive',['../classdaisy_1_1_spi_handle.html#a106ff23028e560dad08ea62900e26229',1,'daisy::SpiHandle']]],
+  ['blockingreceive_1',['BlockingReceive',['../classdaisy_1_1_spi_handle.html#a91106fe656c12d5b7be7858bcb2c6d16',1,'daisy::SpiHandle::BlockingReceive()'],['../classdaisy_1_1_multi_slave_spi_handle.html#a0aa1732f5b06ce525610d0b2af1bed3c',1,'daisy::MultiSlaveSpiHandle::BlockingReceive()']]],
+  ['blockingtransmit_2',['BlockingTransmit',['../classdaisy_1_1_spi_handle.html#a89ccde60807d2681bc96425c0600c82d',1,'daisy::SpiHandle::BlockingTransmit()'],['../classdaisy_1_1_multi_slave_spi_handle.html#a61dec175de2c4d16c4952f51c30b9b68',1,'daisy::MultiSlaveSpiHandle::BlockingTransmit()']]],
+  ['blockingtransmitandreceive_3',['BlockingTransmitAndReceive',['../classdaisy_1_1_spi_handle.html#a106ff23028e560dad08ea62900e26229',1,'daisy::SpiHandle::BlockingTransmitAndReceive()'],['../classdaisy_1_1_multi_slave_spi_handle.html#ab2455acb7a9503d845df7ec55fff51bb',1,'daisy::MultiSlaveSpiHandle::BlockingTransmitAndReceive()']]],
   ['blue_4',['Blue',['../classdaisy_1_1_color.html#a9270f936191af9fcd59dad58a8ab0387',1,'daisy::Color']]],
   ['boost_5',['Boost',['../structdaisy_1_1_system_1_1_config.html#abba756da586d15e0a603a661721c86d6',1,'daisy::System::Config']]],
   ['bsp_5fsd_5fabortcallback_6',['BSP_SD_AbortCallback',['../group__utility.html#ga0a395393d1522c9844c525f0dc61fe3e',1,'bsp_sd_diskio.h']]],
@@ -18,5 +18,6 @@ var searchData=
   ['bsp_5fsd_5freadcpltcallback_15',['BSP_SD_ReadCpltCallback',['../group__utility.html#ga8d66ac35cee6a454f7e584f0051bc9f8',1,'bsp_sd_diskio.h']]],
   ['bsp_5fsd_5fwriteblocks_16',['BSP_SD_WriteBlocks',['../group__utility.html#gad8f41626181da956e81e713682de3fd5',1,'bsp_sd_diskio.h']]],
   ['bsp_5fsd_5fwriteblocks_5fdma_17',['BSP_SD_WriteBlocks_DMA',['../group__utility.html#ga2f57e8a4a23c9ea770b9f9da5eab8e8f',1,'bsp_sd_diskio.h']]],
-  ['bsp_5fsd_5fwritecpltcallback_18',['BSP_SD_WriteCpltCallback',['../group__utility.html#gafc4f1ecdf361e0c0808803167f31d61b',1,'bsp_sd_diskio.h']]]
+  ['bsp_5fsd_5fwritecpltcallback_18',['BSP_SD_WriteCpltCallback',['../group__utility.html#gafc4f1ecdf361e0c0808803167f31d61b',1,'bsp_sd_diskio.h']]],
+  ['buttonmonitor_19',['ButtonMonitor',['../classdaisy_1_1_button_monitor.html#ae906010f7300e32945a64b7c3b5fa083',1,'daisy::ButtonMonitor']]]
 ];

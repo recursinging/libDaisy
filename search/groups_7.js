@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['lcd_0',['Lcd',['../group__lcd.html',1,'']]],
-  ['led_1',['LED',['../group__led.html',1,'']]],
-  ['libdaisy_2',['LIBDAISY',['../group__libdaisy.html',1,'']]]
+  ['max11300_0',['MAX11300',['../group___m_a_x11300.html',1,'']]],
+  ['midi_1',['MIDI',['../group__midi.html',1,'']]],
+  ['midi_5fevents_2',['MIDI_EVENTS',['../group__midi__events.html',1,'']]]
 ];

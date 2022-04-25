@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['other_0',['OTHER',['../group__other.html',1,'']]]
+  ['peripheral_0',['PERIPHERAL',['../group__peripheral.html',1,'']]]
 ];

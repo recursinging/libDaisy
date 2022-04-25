@@ -1,21 +1,10 @@
 var searchData=
 [
-  ['off_0',['OFF',['../classdaisy_1_1_color.html#af93d31d5fc63705c228bf9da407c9a40a725dbdfb5e3ab465acff41a70f1f5a9d',1,'daisy::Color']]],
-  ['ok_1',['OK',['../group__dac.html#gga99e6cb4ca339f27351327340bc40f0d9ae0aa021e21dddbd6d8cecec71e9cf564',1,'daisy::BlockingSpiTransport::OK()'],['../group__dac.html#ggacd2952c79b8b9a8aa50158af12569b1cae0aa021e21dddbd6d8cecec71e9cf564',1,'daisy::MAX11300Driver::OK()'],['../class_sdram_handle.html#ab6b59b2a4b1abdec7369ffcdceac73f7ae0aa021e21dddbd6d8cecec71e9cf564',1,'SdramHandle::OK()'],['../classdaisy_1_1_i2_c_handle.html#a4896eede457dea6ed2ed68d9b06e8e16ae0aa021e21dddbd6d8cecec71e9cf564',1,'daisy::I2CHandle::OK()'],['../classdaisy_1_1_spi_handle.html#acee8aad7e8008a2dbdfc8f260712bab7ae0aa021e21dddbd6d8cecec71e9cf564',1,'daisy::SpiHandle::OK()'],['../classdaisy_1_1_uart_handler.html#ac45c7ac82e6f0328b4e7b03fd12e7237ae0aa021e21dddbd6d8cecec71e9cf564',1,'daisy::UartHandler::OK()']]],
-  ['omnimodeoff_2',['OmniModeOff',['../namespacedaisy.html#af9da54b73be4dec526670bd6c53ad98aac4babebcb76ef6c8a5c8118ad9400294',1,'daisy']]],
-  ['omnimodeon_3',['OmniModeOn',['../namespacedaisy.html#af9da54b73be4dec526670bd6c53ad98aa5fa03047c15f08efa46b4818135ad8f4',1,'daisy']]],
-  ['openuipageitem_4',['openUiPageItem',['../classdaisy_1_1_abstract_menu.html#a48039035e616d6ecf42cc15561544fada27c9dc4a32701853b13ed0d08fc252a6',1,'daisy::AbstractMenu']]],
-  ['output_5',['OUTPUT',['../classdaisy_1_1_g_p_i_o.html#af853f20a7e4f4d4f337c30fe1d6f1827a50a87f0d71f7221582dad4bf507a0f34',1,'daisy::GPIO']]],
-  ['output_5fod_6',['OUTPUT_OD',['../classdaisy_1_1_g_p_i_o.html#af853f20a7e4f4d4f337c30fe1d6f1827a9fdc84240088be4e2d30979a2cef2b78',1,'daisy::GPIO']]],
-  ['ovs_5f1024_7',['OVS_1024',['../classdaisy_1_1_adc_handle.html#ad8bb144ed73f891cec1d10122f0ba541a5eda1cf71ea9caff0375e2dafcaabc30',1,'daisy::AdcHandle']]],
-  ['ovs_5f128_8',['OVS_128',['../classdaisy_1_1_adc_handle.html#ad8bb144ed73f891cec1d10122f0ba541a6d5b696689b7341b8a4c4c44fba5d83f',1,'daisy::AdcHandle']]],
-  ['ovs_5f16_9',['OVS_16',['../classdaisy_1_1_adc_handle.html#ad8bb144ed73f891cec1d10122f0ba541a4c8bc27d4c3271573d24dc734866aee7',1,'daisy::AdcHandle']]],
-  ['ovs_5f256_10',['OVS_256',['../classdaisy_1_1_adc_handle.html#ad8bb144ed73f891cec1d10122f0ba541a80a1ea3cf83083031626788571ac1f97',1,'daisy::AdcHandle']]],
-  ['ovs_5f32_11',['OVS_32',['../classdaisy_1_1_adc_handle.html#ad8bb144ed73f891cec1d10122f0ba541a31cba791b12a3bb0e1a3c154476b1337',1,'daisy::AdcHandle']]],
-  ['ovs_5f4_12',['OVS_4',['../classdaisy_1_1_adc_handle.html#ad8bb144ed73f891cec1d10122f0ba541a569e055919aece135787e6e38a61d281',1,'daisy::AdcHandle']]],
-  ['ovs_5f512_13',['OVS_512',['../classdaisy_1_1_adc_handle.html#ad8bb144ed73f891cec1d10122f0ba541a2b72d93cef73f8183482069168f63fac',1,'daisy::AdcHandle']]],
-  ['ovs_5f64_14',['OVS_64',['../classdaisy_1_1_adc_handle.html#ad8bb144ed73f891cec1d10122f0ba541a92965b8ccbfaa66a80b61c034d84a91b',1,'daisy::AdcHandle']]],
-  ['ovs_5f8_15',['OVS_8',['../classdaisy_1_1_adc_handle.html#ad8bb144ed73f891cec1d10122f0ba541afe359f7685211cc44ef3519e4a1f30df',1,'daisy::AdcHandle']]],
-  ['ovs_5flast_16',['OVS_LAST',['../classdaisy_1_1_adc_handle.html#ad8bb144ed73f891cec1d10122f0ba541a77d958c9a12575d82491ffbe31d543d0',1,'daisy::AdcHandle']]],
-  ['ovs_5fnone_17',['OVS_NONE',['../classdaisy_1_1_adc_handle.html#ad8bb144ed73f891cec1d10122f0ba541aec107a42c4f5156c9cf46ea65178b101',1,'daisy::AdcHandle']]]
+  ['negative_5f10_5fto_5f0_0',['NEGATIVE_10_TO_0',['../namespacedaisy_1_1_m_a_x11300_types.html#aa2604bd1a07178f2a22f9edf829f4c47a59136a8606208d070ab08a0639032f72',1,'daisy::MAX11300Types::NEGATIVE_10_TO_0()'],['../namespacedaisy_1_1_m_a_x11300_types.html#a2c0fb886b30c1bd5c1d0ec66b3bd4fe3a59136a8606208d070ab08a0639032f72',1,'daisy::MAX11300Types::NEGATIVE_10_TO_0()']]],
+  ['negative_5f5_5fto_5f5_1',['NEGATIVE_5_TO_5',['../namespacedaisy_1_1_m_a_x11300_types.html#aa2604bd1a07178f2a22f9edf829f4c47a1ffc50c90d3e458e9a641840eec1c541',1,'daisy::MAX11300Types::NEGATIVE_5_TO_5()'],['../namespacedaisy_1_1_m_a_x11300_types.html#a2c0fb886b30c1bd5c1d0ec66b3bd4fe3a1ffc50c90d3e458e9a641840eec1c541',1,'daisy::MAX11300Types::NEGATIVE_5_TO_5()']]],
+  ['none_2',['NONE',['../structdaisy_1_1_uart_handler_1_1_config.html#a69458bc285ceaf3e20fba9299e2ea5b8ab50339a10e1de285ac99d4c3990b8693',1,'daisy::UartHandler::Config']]],
+  ['nopull_3',['NOPULL',['../classdaisy_1_1_g_p_i_o.html#a99f432b0880dab3d3b202f1cd8081f0daf43b0f41977e72ada334d920faf460d5',1,'daisy::GPIO']]],
+  ['noteoff_4',['NoteOff',['../group__midi__events.html#ggaaf09bb687034c8776ca0c68ed3ed4179a1b12be0cc7d773bce8e9a29a6bb6f503',1,'daisy']]],
+  ['noteon_5',['NoteOn',['../group__midi__events.html#ggaaf09bb687034c8776ca0c68ed3ed4179a9a64652b06f5ea678d94472ecd77d3ee',1,'daisy']]],
+  ['num_5fpins_6',['NUM_PINS',['../class_shift_register595.html#a2e0140c5d6cac8821d558b2683f7a134a831131c4aff6b1c4ab21fa12d9c47a38',1,'ShiftRegister595']]]
 ];

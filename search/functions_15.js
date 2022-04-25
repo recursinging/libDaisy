@@ -1,8 +1,14 @@
 var searchData=
 [
-  ['validateqspi_0',['ValidateQSPI',['../classdaisy_1_1patch__sm_1_1_daisy_patch_s_m.html#a976a69ef54c3232033ed19e9ad8a8af4',1,'daisy::patch_sm::DaisyPatchSM']]],
-  ['validatesdram_1',['ValidateSDRAM',['../classdaisy_1_1patch__sm_1_1_daisy_patch_s_m.html#ad4d3c13495fce0ad6bd595284fe3a69b',1,'daisy::patch_sm::DaisyPatchSM']]],
-  ['value_2',['Value',['../classdaisy_1_1_analog_control.html#a099ff147f24ae2220921d22729a66020',1,'daisy::AnalogControl::Value()'],['../classdaisy_1_1_parameter.html#a0599bc2fa6dae903698de8ee499a0306',1,'daisy::Parameter::Value()']]],
-  ['vegasmode_3',['VegasMode',['../classdaisy_1_1_daisy_field.html#a41545d0550827c3d751676dc37d67253',1,'daisy::DaisyField']]],
-  ['voltsto12bituint_4',['VoltsTo12BitUint',['../group__dac.html#ga5795e9c45dfffa692e052559b07a3e66',1,'daisy::MAX11300Driver']]]
+  ['u82f_0',['u82f',['../group__utility.html#ga197403d1b28c9360306bfd2f5e4809a7',1,'daisy_core.h']]],
+  ['uarthandler_1',['UartHandler',['../classdaisy_1_1_uart_handler.html#a673f1aa44d7ebc875078623e7a49becd',1,'daisy::UartHandler::UartHandler(const UartHandler &amp;other)=default'],['../classdaisy_1_1_uart_handler.html#ace6ce8a8fe979bbbd9fc7fe4e79eb520',1,'daisy::UartHandler::UartHandler()']]],
+  ['ui_2',['UI',['../classdaisy_1_1_u_i.html#a025f13842f7b648c54e0920a694e9e2b',1,'daisy::UI']]],
+  ['uieventqueue_3',['UiEventQueue',['../classdaisy_1_1_ui_event_queue.html#ad71a77e7b4554b0f480b3e8f4f331361',1,'daisy::UiEventQueue']]],
+  ['uipage_4',['UiPage',['../classdaisy_1_1_ui_page.html#a68de16b9635770825aaed74e3d9eb6d5',1,'daisy::UiPage']]],
+  ['update_5',['Update',['../classdaisy_1_1_s_s_d130x_driver.html#a016333b71cda3956f8a47680b7ef6bf7',1,'daisy::SSD130xDriver::Update()'],['../classdaisy_1_1_shift_register4021.html#a74b7a683eaa2893e227e42977041f692',1,'daisy::ShiftRegister4021::Update()'],['../classdaisy_1_1_one_bit_graphics_display.html#a0ea638bde2bff96ee10dec0969a7fc56',1,'daisy::OneBitGraphicsDisplay::Update()'],['../classdaisy_1_1_oled_display.html#aea1796db0121368cff3d760ed7bc8548',1,'daisy::OledDisplay::Update()'],['../classdaisy_1_1_led.html#aeec57ceddd9f685c50446321ba6e1492',1,'daisy::Led::Update()'],['../classdaisy_1_1_rgb_led.html#a6bf7b10c72831aa2d2a7f021822f1899',1,'daisy::RgbLed::Update()']]],
+  ['updateexample_6',['UpdateExample',['../classdaisy_1_1_daisy_versio.html#a925301048f435829a808907b62ff41d8',1,'daisy::DaisyVersio']]],
+  ['updateleds_7',['UpdateLeds',['../classdaisy_1_1_daisy_petal.html#ab224cad4e33c800d36ab90184859b006',1,'daisy::DaisyPetal::UpdateLeds()'],['../classdaisy_1_1_daisy_pod.html#a77da50cfdca4810687adde08a4913135',1,'daisy::DaisyPod::UpdateLeds()'],['../classdaisy_1_1_daisy_versio.html#ad25ccf6c7994e35b95d8912a63f00e72',1,'daisy::DaisyVersio::UpdateLeds()']]],
+  ['updatesize_8',['UpdateSize',['../classdaisy_1_1_fixed_cap_str_base.html#afe7cbe08170e3c8c95544b71e29e1e02',1,'daisy::FixedCapStrBase']]],
+  ['usbhandle_9',['UsbHandle',['../class_usb_handle.html#a0b8bd2b2482a5cf7479f1472094d2099',1,'UsbHandle::UsbHandle()'],['../class_usb_handle.html#a0b8bd2b2482a5cf7479f1472094d2099',1,'UsbHandle::UsbHandle()']]],
+  ['usbhosthandle_10',['USBHostHandle',['../classdaisy_1_1_u_s_b_host_handle.html#a12043e36043180b52f73bf096d0f0833',1,'daisy::USBHostHandle::USBHostHandle()'],['../classdaisy_1_1_u_s_b_host_handle.html#a20ea1f4d2e2cfc3f749364b1dc5c9b73',1,'daisy::USBHostHandle::USBHostHandle(const USBHostHandle &amp;other)=default']]]
 ];

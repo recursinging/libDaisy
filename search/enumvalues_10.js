@@ -1,13 +1,19 @@
 var searchData=
 [
-  ['tim_5f2_0',['TIM_2',['../structdaisy_1_1_timer_handle_1_1_config.html#a907160c00bf0cad7ec645368bd4f5bcaa848c6355c514c385d53dde45615d0411',1,'daisy::TimerHandle::Config']]],
-  ['tim_5f3_1',['TIM_3',['../structdaisy_1_1_timer_handle_1_1_config.html#a907160c00bf0cad7ec645368bd4f5bcaa069b86aefb75f0c622fc14d8e28db631',1,'daisy::TimerHandle::Config']]],
-  ['tim_5f4_2',['TIM_4',['../structdaisy_1_1_timer_handle_1_1_config.html#a907160c00bf0cad7ec645368bd4f5bcaac9136368e302d247b27e74dd7726ec1f',1,'daisy::TimerHandle::Config']]],
-  ['tim_5f5_3',['TIM_5',['../structdaisy_1_1_timer_handle_1_1_config.html#a907160c00bf0cad7ec645368bd4f5bcaa6840481ce38511a53a7e49e81c02a936',1,'daisy::TimerHandle::Config']]],
-  ['timingclock_4',['TimingClock',['../namespacedaisy.html#a3069be23e98a0299bbfa8f1759754d45afb2f72454a51663d2093d251757e4d1c',1,'daisy']]],
-  ['transmit_5',['TRANSMIT',['../classdaisy_1_1_i2_c_handle.html#a8f815f7a77948286f0fa0065a1f7c54ca02d786cd0f7318c2533125f8b591abc5',1,'daisy::I2CHandle']]],
-  ['tunerequest_6',['TuneRequest',['../namespacedaisy.html#a4f648ead175d62e97ceb4d3b49f692f5a3231bb4eb5579319e04a8c0ac3a9b84d',1,'daisy']]],
-  ['tx_7',['TX',['../classdaisy_1_1_spi_handle.html#aa7c484882faf187c7c4153db7cf5e4daa869036c9d97cf6593c6f1c2ccfd99a49',1,'daisy::SpiHandle']]],
-  ['type_5fmomentary_8',['TYPE_MOMENTARY',['../classdaisy_1_1_switch.html#a944058682bae079439ddddd42302b483aaddc897d9c79b39b2024829bebb336a1',1,'daisy::Switch']]],
-  ['type_5ftoggle_9',['TYPE_TOGGLE',['../classdaisy_1_1_switch.html#a944058682bae079439ddddd42302b483a5c6a5cc5d4fbe03be97b81244e669038',1,'daisy::Switch']]]
+  ['receive_0',['RECEIVE',['../structdaisy_1_1_sai_handle_1_1_config.html#a80ffb7d40b82652f1550e8cf6ca56f81a42ddaaef1ffd16ad35901150add8f8f2',1,'daisy::SaiHandle::Config::RECEIVE()'],['../classdaisy_1_1_i2_c_handle.html#a8f815f7a77948286f0fa0065a1f7c54ca42ddaaef1ffd16ad35901150add8f8f2',1,'daisy::I2CHandle::RECEIVE()']]],
+  ['red_1',['RED',['../classdaisy_1_1_color.html#af93d31d5fc63705c228bf9da407c9a40a8b805ea394bedf4786fd371ea10283b8',1,'daisy::Color']]],
+  ['reset_2',['Reset',['../group__midi__events.html#gga3069be23e98a0299bbfa8f1759754d45a51ff911624e8d6e5a76ce0433d00130f',1,'daisy']]],
+  ['resetallcontrollers_3',['ResetAllControllers',['../group__midi__events.html#ggaf9da54b73be4dec526670bd6c53ad98aa16372b6654282e39482508fd9dd45752',1,'daisy']]],
+  ['right_4',['right',['../group__ui.html#ggac734c565c1dc55cbf6b74ea942f40c1ca7c4f29407893c334a6cb7a87bf045c0d',1,'daisy']]],
+  ['ring_5fled_5f1_5',['RING_LED_1',['../classdaisy_1_1_daisy_petal.html#a6b6b85167d6938e7b4d151599773d682a4868bead6b4bb7b6d1e15ce3f6a34edf',1,'daisy::DaisyPetal']]],
+  ['ring_5fled_5f2_6',['RING_LED_2',['../classdaisy_1_1_daisy_petal.html#a6b6b85167d6938e7b4d151599773d682ac7b3f1596a8438fac25c8696a8d8e165',1,'daisy::DaisyPetal']]],
+  ['ring_5fled_5f3_7',['RING_LED_3',['../classdaisy_1_1_daisy_petal.html#a6b6b85167d6938e7b4d151599773d682a1bd8643462c5d2072526d49dd47a69db',1,'daisy::DaisyPetal']]],
+  ['ring_5fled_5f4_8',['RING_LED_4',['../classdaisy_1_1_daisy_petal.html#a6b6b85167d6938e7b4d151599773d682a546d934044b1971c72a872a95e1f7391',1,'daisy::DaisyPetal']]],
+  ['ring_5fled_5f5_9',['RING_LED_5',['../classdaisy_1_1_daisy_petal.html#a6b6b85167d6938e7b4d151599773d682a962ed86e4759724ea0392e07ccc89aa9',1,'daisy::DaisyPetal']]],
+  ['ring_5fled_5f6_10',['RING_LED_6',['../classdaisy_1_1_daisy_petal.html#a6b6b85167d6938e7b4d151599773d682add3683515df29d7a38efde9933530895',1,'daisy::DaisyPetal']]],
+  ['ring_5fled_5f7_11',['RING_LED_7',['../classdaisy_1_1_daisy_petal.html#a6b6b85167d6938e7b4d151599773d682a86e88f2c21c605b6bb514c3eaf6f330e',1,'daisy::DaisyPetal']]],
+  ['ring_5fled_5f8_12',['RING_LED_8',['../classdaisy_1_1_daisy_petal.html#a6b6b85167d6938e7b4d151599773d682a1f6fc229b42f772bc9088f62ce3e5036',1,'daisy::DaisyPetal']]],
+  ['ring_5fled_5flast_13',['RING_LED_LAST',['../classdaisy_1_1_daisy_petal.html#a6b6b85167d6938e7b4d151599773d682a4b60f0a2dbcfe749c77a3cf054f85e39',1,'daisy::DaisyPetal']]],
+  ['rx_14',['RX',['../classdaisy_1_1_spi_handle.html#aa7c484882faf187c7c4153db7cf5e4daaf9c24782c24c237d16e79f18e2fa9046',1,'daisy::SpiHandle::RX()'],['../structdaisy_1_1_uart_handler_1_1_config.html#ae0a7cc8284cbbe42f1d95797b5862084af9c24782c24c237d16e79f18e2fa9046',1,'daisy::UartHandler::Config::RX()']]],
+  ['rx_5ftx_15',['RX_TX',['../classdaisy_1_1_spi_handle.html#aa7c484882faf187c7c4153db7cf5e4daaa9f94fc2b5a22b1ebff62655559f82b2',1,'daisy::SpiHandle']]]
 ];

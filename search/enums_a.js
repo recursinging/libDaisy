@@ -1,5 +1,4 @@
 var searchData=
 [
-  ['orientation_0',['Orientation',['../classdaisy_1_1_abstract_menu.html#a888073f41ded25c2aff52aed3506470f',1,'daisy::AbstractMenu']]],
-  ['oversampling_1',['OverSampling',['../classdaisy_1_1_adc_handle.html#ad8bb144ed73f891cec1d10122f0ba541',1,'daisy::AdcHandle']]]
+  ['nss_0',['NSS',['../structdaisy_1_1_spi_handle_1_1_config.html#a1832b92ab9f6dcacb9c010c4c77c844e',1,'daisy::SpiHandle::Config']]]
 ];
